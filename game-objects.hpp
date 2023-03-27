@@ -6,6 +6,14 @@
 #include <iostream>
 #include <string>
 
+class Item {
+    public:
+        Item();
+    private:
+        std::string name;
+        std::string description;
+};
+
 class Harmonic {
     public:
         Harmonic(int resonanceRequirement): resonanceRequirement_(resonanceRequirement){};
@@ -34,7 +42,7 @@ class Player: public Actor {
             return instance;
         }
 
-        void attack() override {};
+        void attack() override;
     private:
         static std::vector<Item> inventory_;
 };
