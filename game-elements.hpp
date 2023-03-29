@@ -48,15 +48,10 @@ class ItemFactory {
             return instance;
         }
     private:
-        std::shared_ptr<Item> getItem(string name, string desc) {
-            auto it = items_.find(name);
-            if (it != items_.end()) {
-                return it->second;
-            }
-            auto item = std::make_shared<Item>(name, desc);
-            items_[name] = item;
-            return item;
-        }
+        ItemFactory(){};
+        ItemFactory(ItemFactory&) = delete;
+        ItemFactory& operator=(ItemFactory) = delete;
+        std::shared_ptr<Item> getItem(string name, string desc);
         std::unordered_map<string, std::shared_ptr<Item>> items_;
 };
 
@@ -71,15 +66,7 @@ class HarmonicFactory {
             return instance;
         }
     private:
-        std::shared_ptr<Harmonic> getHarmonic(string name, string desc, int attack, int resonanceRequirement) {
-            auto it = harmonics_.find(name);
-            if (it != harmonics_.end()) {
-                return it->second;
-            }
-            auto harmonic = std::make_shared<Harmonic>(name, desc, attack, resonanceRequirement);
-            harmonics_[name] = harmonic;
-            return harmonic;
-        }
+        std::shared_ptr<Harmonic> getHarmonic(string name, string desc, int attack, int resonanceRequirement);
         std::unordered_map<string, std::shared_ptr<Harmonic>> harmonics_;
 };
 
