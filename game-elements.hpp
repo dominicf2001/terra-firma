@@ -21,21 +21,21 @@ class Item {
 
 class Harmonic {
     public:
-        Harmonic(string name, string desc, int attack, int resonanceRequirement) {
+        Harmonic(string name, string desc, int damage, int resonanceReq) {
             name_ = name;
             desc_ = desc;
-            attack_ = attack;
-            resonanceRequirement_ = resonanceRequirement;
+            damage_ = damage    ;
+            resonanceReq_ = resonanceReq;
         };
         string getName() const {return name_;}
         string getDesc() const {return desc_;}
-        int getAttack() const {return attack_;}
-        int getResonanceRequirement() const {return resonanceRequirement_;}
+        int getDamage() const {return damage_;}
+        int getResonanceReq() const {return resonanceReq_;}
     private:
         string name_;
         string desc_;
-        int attack_;
-        int resonanceRequirement_;
+        int damage_;
+        int resonanceReq_;
 };
 
 class ItemFactory {

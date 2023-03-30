@@ -1,11 +1,13 @@
 #include "game-elements.hpp"
 #include "game-actors.hpp"
+#include "battle-logic.hpp"
 #include <memory>
 #include <iostream>
 
 int main() {
-    Player* player = Player::getInstance();
-    player->printHarmonics();
+    std::shared_ptr<Actor> player = std::make_shared<Player>("Alex");
+    std::shared_ptr<Actor> testGuardian = std::make_shared<RiftGuardian>("Test Guardian");
+    startBattle(player, testGuardian);
 
     return 0;
 }
