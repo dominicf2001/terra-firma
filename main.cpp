@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main() {
-    std::shared_ptr<Actor> player = std::make_shared<Player>("Alex");
+    std::shared_ptr<Actor> player = std::make_shared<Player>("Player");
     std::shared_ptr<Actor> testGuardian = std::make_shared<RiftGuardian>("Test Guardian");
     startBattle(player, testGuardian);
 
