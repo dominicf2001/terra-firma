@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include "utilities.hpp"
 using std::cout; using std::string;
 
 void startBattle(std::shared_ptr<Actor> player, std::shared_ptr<Actor> enemy) {
@@ -29,13 +30,10 @@ void startBattle(std::shared_ptr<Actor> player, std::shared_ptr<Actor> enemy) {
     }
     if (player->getHealth() <= 0) {
         cout << "\nYou have died...\n\n";
-        cout << R"(
-  _____
- /     \
-| () () |
- \  ^  /
-  |||||
-  |||||
-)" << '\n';
+        printSkull();
+
+    } else {
+        cout << "\nYou have defeated: " << enemy->getName() << ", you are a glorious warrior!\n\n";
+        printTrophy();
     }
 }

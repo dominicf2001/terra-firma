@@ -1,10 +1,9 @@
 #include "game-actors.hpp"
+#include "utilities.hpp"
 #include <iostream>
 #include <memory>
 #include <random>
 #include <string>
-#include <thread>
-#include <chrono>
 using std::cout; using std::cin; using std::string;
 
 void Actor::printHarmonics() const {
@@ -16,14 +15,14 @@ void Actor::printHarmonics() const {
     }
 }
 
-Player::Player(string name): Actor(100, 3, name) {
+Player::Player(string name): Actor(10, 3, name) {
     HarmonicFactory& hFac = HarmonicFactory::getInstance();
     ItemFactory& iFac = ItemFactory::getInstance();
     harmonics_ = {hFac.getResonanceBlast()};
     inventory_ = {iFac.getCaveDoorKeyOne()};
 };
 
-RiftGuardian::RiftGuardian(string name): Actor(200, 10, name) {
+RiftGuardian::RiftGuardian(string name): Actor(60, 10, name) {
     HarmonicFactory& fac = HarmonicFactory::getInstance();
     harmonics_ = {fac.getResonanceBlast()};
 };
@@ -42,16 +41,16 @@ void Player::attack(std::shared_ptr<Actor> enemy) {
             cout << "\nInvalid! Please try again.\n\n";
     }
     cout << "\nYou attack with: " << harmonics_[0]->getName() << " for: " << std::flush;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    sleep(1);
     cout << harmonics_[0]->getDamage() << " DAMAGE!\n\n" << std::flush;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    sleep(1);
     enemy->takeDamage(harmonics_[i]->getDamage());
 }
 
 void RiftGuardian::attack(std::shared_ptr<Actor> player) {
     cout << getName() << " attacks you with: " << harmonics_[0]->getName() << " for: " << std::flush;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    sleep(1);
     cout << harmonics_[0]->getDamage() << " DAMAGE!\n\n" << std::flush;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    sleep(1);
     player->takeDamage(harmonics_[0]->getDamage());
 }
