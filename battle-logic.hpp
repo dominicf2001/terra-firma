@@ -1,4 +1,26 @@
+#pragma once
 #include "game-actors.hpp"
 #include <memory>
+#include <iostream>
+using std::shared_ptr;
 
-void startBattle(std::shared_ptr<Actor>, std::shared_ptr<Actor>);
+class Actor;
+class Player;
+class BattleSystem {
+    public:
+        BattleSystem(shared_ptr<Player>);
+        void startBattle(shared_ptr<Actor>);
+    private:
+        bool isBattleOver();
+
+        void printPlayerDisplay();
+        void printEnemyDisplay();
+        void printGameOverDisplay();
+
+        void playerAttack();
+        void enemyAttack();
+
+        shared_ptr<Player> player_;
+        shared_ptr<Actor> enemy_;
+        bool playerTurn_;
+};

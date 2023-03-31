@@ -1,24 +1,24 @@
 #pragma once
-
+#include "battle-logic.hpp"
 #include "game-elements.hpp"
 #include <vector>
 #include <memory>
 #include <string>
 #include <iostream>
 using std::vector; using std::string;
-using std::make_shared; using std::shared_ptr;
+using std::make_shared; using std::shared_ptr; using std::make_unique; using std::unique_ptr;
 
+class BattleSystem;
 class Actor {
     public:
-        Actor(int health=100, int resonance=1, string name="", vector<std::shared_ptr<Harmonic>> harmonics={})
+        Actor(int health=100, int resonance=1, string name="", vector<shared_ptr<Harmonic>> harmonics={})
             : health_(health), resonance_(resonance), name_(name), harmonics_(harmonics) {};
 
-        virtual void attack(std::shared_ptr<Actor>);
         void takeDamage(int damage) {health_ -= damage;} // delegate to Battle implementor
-        void printHarmonics() const;
         int getHealth() const {return health_;}
         int getResonance() const {return resonance_;}
         string getName() const {return name_;}
+        vector<shared_ptr<Harmonic>> getHarmonics() const {return harmonics_;}
         virtual ~Actor() = default;
     protected:
         vector<shared_ptr<Harmonic>> harmonics_;
@@ -30,22 +30,24 @@ class Actor {
 class Player: public Actor {
     public:
         Player(string name="Player")
-            : Actor(100, 2, name) {
+            : Actor(100, 2, name){
                 HarmonicFactory& hFac = HarmonicFactory::getInstance();
                 harmonics_ = {
                     hFac.getResonanceBlast()
                 };
             };
-        void attack(shared_ptr<Actor>) override; // Delegate to Battle implementor
         static shared_ptr<Player> getInstance() {
-            if (instance_ == nullptr)
+            if (instance_ == nullptr) {
                 instance_ = make_shared<Player>();
+                instance_->battleSystem = make_unique<BattleSystem>(instance_);
+            }
             return instance_;
         }
+        void startBattle(shared_ptr<Actor> enemy) {battleSystem->startBattle(enemy);}
     private:
         static shared_ptr<Player> instance_;
         vector<shared_ptr<Item>> inventory_;
-        // pointer to battle implementor
+        unique_ptr<BattleSystem> battleSystem;
 };
 
 class RiftGuardian: public Actor {

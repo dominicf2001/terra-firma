@@ -6,8 +6,7 @@
 using std::make_shared; using std::shared_ptr;
 
 int main() {
-
-    startBattle(Player::getInstance(), make_shared<RiftGuardian>("Test Guardian"));
-
+    shared_ptr<Player> player = Player::getInstance();
+    player->startBattle(make_shared<RiftGuardian>("Test Guardian"));
     return 0;
 }

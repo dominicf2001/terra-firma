@@ -1,39 +1,91 @@
 #include "game-actors.hpp"
-#include "game-elements.hpp"
+#include "battle-logic.hpp"
 #include <iostream>
 #include <memory>
 #include <string>
-#include <thread>
-#include <chrono>
 #include "utilities.hpp"
-using std::cout; using std::string;
+using std::cout; using std::string; using std::cin;
+using std::shared_ptr;
 
-void startBattle(std::shared_ptr<Actor> player, std::shared_ptr<Actor> enemy) {
-    bool battleOver = false;
-    bool playerTurn = true;
-    string encounterInfo = "\nYou have encountered: " + enemy->getName() + " - Resonance: " + std::to_string(enemy->getResonance());
-    cout << "\n" << string(encounterInfo.size(), '*') << encounterInfo << '\n' << string(encounterInfo.size(), '*') << "\n\n";
-    while (!battleOver) {
-        if (playerTurn) {
-            cout << "---------------------------------------------------------------------------------------------\n";
-            cout << "\n========Your Move========\n\n";
-            player->attack(enemy);
-            battleOver = enemy->getHealth() <= 0;
+
+BattleSystem::BattleSystem(shared_ptr<Player> player) : player_(player), playerTurn_(true) {};
+
+bool BattleSystem::isBattleOver() {return (player_->getHealth() <= 0 || enemy_->getHealth() <= 0);}
+
+void BattleSystem::startBattle(shared_ptr<Actor> enemy) {
+    enemy_ = enemy;
+    while (!isBattleOver()) {
+        if (playerTurn_) {
+            printPlayerDisplay();
+            playerAttack();
         } else {
-            cout << "---------------------------------------------------------------------------------------------\n";
-            cout << "\n========Enemies Move========\n\n";
-            enemy->attack(player);
-            battleOver = player->getHealth() <= 0;
+            printEnemyDisplay();
+            enemyAttack();
         }
-        playerTurn = !playerTurn;
-        cout << "---------------------------------------------------------------------------------------------\n";
+        playerTurn_ = !playerTurn_;
     }
-    if (player->getHealth() <= 0) {
+    printGameOverDisplay();
+}
+
+
+// ATTACKS
+void BattleSystem::playerAttack() {
+    int i = -1;
+    while (i < 0 || i >= player_->getHarmonics().size()) {
+        cout << "[0 - " << (player_->getHarmonics().size() - 1) << "]: ";
+        cin >> i;
+        if (i < 0 || i >= player_->getHarmonics().size())
+            cout << "\n=-- Invalid! Please try again. --=\n\n";
+    }
+    shared_ptr<Harmonic> harmonic = player_->getHarmonics()[i];
+    int dmg = harmonic->getDmg();
+    cout << "\nYou attack with: " << harmonic->getName() << " for: " << std::flush;
+    sleep(1);
+    cout << dmg << " DAMAGE!\n\n" << std::flush;
+    sleep(1);
+    enemy_->takeDamage(dmg);
+}
+
+void BattleSystem::enemyAttack() {
+    int dmg = enemy_->getHarmonics()[0]->getDmg();
+    cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
+    sleep(1);
+    cout << dmg << " DAMAGE!\n\n" << std::flush;
+    sleep(1);
+    player_->takeDamage(dmg);
+}
+
+
+// DISPLAYS
+void BattleSystem::printPlayerDisplay() {
+    cout << "---------------------------------------------------------------------------------------------\n";
+    cout << "\n========Your Move========\n\n";
+    cout << "Your health: (" << player_->getHealth() << ')' << '\n' << "Your resonance: (" << player_->getResonance() << ")\n\n";
+    cout << enemy_->getName() << "'s health: (" << enemy_->getHealth() << ')' << '\n' << enemy_->getName()<< "'s resonance: " << '(' << enemy_->getResonance() << ")\n\n";
+
+    cout << "Choose a Harmonic!\n" << "-----------------\n";
+    for (int i = 0; i < player_->getHarmonics().size(); ++i) {
+        std::cout << "[" << i << "] " << player_->getHarmonics()[i]->getName() << '\n';
+        std::cout << "    " << "Description: " << player_->getHarmonics()[i]->getDesc() << '\n';
+        std::cout << "    " << "Damage: " << player_->getHarmonics()[i]->getMinDmg() << "-" << player_->getHarmonics()[i]->getMaxDmg() << '\n';
+        std::cout << "    " << "Resonance Requirement: " << player_->getHarmonics()[i]->getResonanceReq() << '\n';;
+    }
+}
+
+void BattleSystem::printEnemyDisplay() {
+    cout << "---------------------------------------------------------------------------------------------\n";
+    cout << "\n========Enemies Move========\n\n";
+}
+
+void BattleSystem::printGameOverDisplay() {
+   if (player_->getHealth() <= 0) {
         cout << "\nYou have died...\n\n";
         printSkull();
-
     } else {
-        cout << "\nYou have defeated: " << enemy->getName() << ", you are a glorious warrior!\n\n";
+        cout << "\nYou have defeated: " << enemy_->getName() << ", you are a glorious warrior!\n\n";
         printTrophy();
     }
 }
+
+
+
