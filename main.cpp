@@ -5,9 +5,9 @@
 #include <iostream>
 
 int main() {
-    std::shared_ptr<Actor> player = std::make_shared<Player>("Player");
-    std::shared_ptr<Actor> testGuardian = std::make_shared<RiftGuardian>("Test Guardian");
-    startBattle(player, testGuardian);
+    EnemyFactory& eFac = EnemyFactory::getInstance();
+
+    startBattle(Player::getInstance(), eFac.getRiftGuardian("Rift Guardian"));
 
     return 0;
 }

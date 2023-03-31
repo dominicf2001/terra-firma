@@ -6,6 +6,26 @@
 #include <unordered_map>
 using std::string;
 
+// ITEM AND ITEM FACTORY
+
+class Item;
+class ItemFactory {
+    public:
+        std::shared_ptr<Item> getCaveDoorKeyOne() {
+            return getItem("Cave Door Key One", "Opens cave door");
+        }
+        static ItemFactory& getInstance() {
+            static ItemFactory instance;
+            return instance;
+        }
+    private:
+        ItemFactory(){};
+        ItemFactory(ItemFactory&) = delete;
+        ItemFactory& operator=(ItemFactory) = delete;
+        std::shared_ptr<Item> getItem(string name, string desc);
+        std::unordered_map<string, std::shared_ptr<Item>> items_;
+};
+
 class Item {
     public:
         Item(string name, string desc) {
@@ -17,6 +37,23 @@ class Item {
     private:
         std::string name_;
         std::string desc_;
+};
+
+// HARMONIC AND HARMONIC FACTORY
+
+class Harmonic;
+class HarmonicFactory {
+    public:
+        std::shared_ptr<Harmonic> getResonanceBlast() {
+            return getHarmonic("Resonance Blast", "Channel energy from The Essence to unleash a concentrated blast of resonant force", 27, 32, 2);
+        }
+        static HarmonicFactory& getInstance() {
+            static HarmonicFactory instance;
+            return instance;
+        }
+    private:
+        std::shared_ptr<Harmonic> getHarmonic(string name, string desc, int minDmg, int maxDmg, int resonanceRequirement);
+        std::unordered_map<string, std::shared_ptr<Harmonic>> harmonics_;
 };
 
 class Harmonic {
@@ -45,35 +82,4 @@ class Harmonic {
         int resonanceReq_;
 };
 
-class ItemFactory {
-    public:
-        std::shared_ptr<Item> getCaveDoorKeyOne() {
-            return getItem("Cave Door Key One", "Opens cave door");
-        }
-        static ItemFactory& getInstance() {
-            static ItemFactory instance;
-            return instance;
-        }
-    private:
-        ItemFactory(){};
-        ItemFactory(ItemFactory&) = delete;
-        ItemFactory& operator=(ItemFactory) = delete;
-        std::shared_ptr<Item> getItem(string name, string desc);
-        std::unordered_map<string, std::shared_ptr<Item>> items_;
-};
-
-
-class HarmonicFactory {
-    public:
-        std::shared_ptr<Harmonic> getResonanceBlast() {
-            return getHarmonic("Resonance Blast", "Channel energy from The Essence to unleash a concentrated blast of resonant force", 27, 32, 2);
-        }
-        static HarmonicFactory& getInstance() {
-            static HarmonicFactory instance;
-            return instance;
-        }
-    private:
-        std::shared_ptr<Harmonic> getHarmonic(string name, string desc, int minDmg, int maxDmg, int resonanceRequirement);
-        std::unordered_map<string, std::shared_ptr<Harmonic>> harmonics_;
-};
 
