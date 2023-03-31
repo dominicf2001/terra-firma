@@ -38,7 +38,7 @@ void Player::attack(std::shared_ptr<Actor> enemy) {
     enemy->takeDamage(dmg);
 }
 
-void Enemy::attack(std::shared_ptr<Actor> player) {
+void Actor::attack(std::shared_ptr<Actor> player) {
     int dmg = harmonics_[0]->getDmg();
     cout << getName() << " attacks you with: " << harmonics_[0]->getName() << " for: " << std::flush;
     sleep(1);
