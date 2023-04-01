@@ -8,13 +8,12 @@
 using std::vector; using std::string;
 using std::make_shared; using std::shared_ptr; using std::make_unique; using std::unique_ptr;
 
-class BattleSystem;
 class Actor {
     public:
         Actor(int health=100, int resonance=1, string name="", vector<shared_ptr<Harmonic>> harmonics={})
             : health_(health), resonance_(resonance), name_(name), harmonics_(harmonics) {};
 
-        void takeDamage(int damage) {health_ -= damage;} // delegate to Battle implementor
+        void changeHealth(int x) {health_ = x;};
         int getHealth() const {return health_;}
         int getResonance() const {return resonance_;}
         string getName() const {return name_;}
@@ -27,6 +26,7 @@ class Actor {
         string name_;
 };
 
+class BattleSystem;
 class Player: public Actor {
     public:
         Player(string name="Player")
@@ -60,7 +60,3 @@ class RiftGuardian: public Actor {
                 };
             };
 };
-
-
-// shared_ptr<Player> player = Player::getInstance();
-// shared_ptr<Enemy> Ghoul = make_shared<Goul>("Ghoul name");

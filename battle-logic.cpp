@@ -7,7 +7,7 @@
 using std::cout; using std::string; using std::cin;
 using std::shared_ptr;
 
-
+// GENERAL
 BattleSystem::BattleSystem(shared_ptr<Player> player) : player_(player), playerTurn_(true) {};
 
 bool BattleSystem::isBattleOver() {return (player_->getHealth() <= 0 || enemy_->getHealth() <= 0);}
@@ -30,6 +30,7 @@ void BattleSystem::startBattle(shared_ptr<Actor> enemy) {
 
 // ATTACKS
 void BattleSystem::playerAttack() {
+    // put additional calculations here
     int i = -1;
     while (i < 0 || i >= player_->getHarmonics().size()) {
         cout << "[0 - " << (player_->getHarmonics().size() - 1) << "]: ";
@@ -43,18 +44,31 @@ void BattleSystem::playerAttack() {
     sleep(1);
     cout << dmg << " DAMAGE!\n\n" << std::flush;
     sleep(1);
-    enemy_->takeDamage(dmg);
+    enemyTakeDamage(dmg);
 }
 
 void BattleSystem::enemyAttack() {
+    // put additional calculations here
     int dmg = enemy_->getHarmonics()[0]->getDmg();
     cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
     sleep(1);
     cout << dmg << " DAMAGE!\n\n" << std::flush;
     sleep(1);
-    player_->takeDamage(dmg);
+    playerTakeDamage(dmg);
 }
 
+// TAKE DAMAGE
+void BattleSystem::playerTakeDamage(int dmg) {
+    // put additional calculations here
+    int newHealth = player_->getHealth() - dmg;
+    player_->changeHealth(newHealth);
+}
+
+void BattleSystem::enemyTakeDamage(int dmg) {
+    // put additional calculations here
+    int newHealth = enemy_->getHealth() - dmg;
+    enemy_->changeHealth(newHealth);
+}
 
 // DISPLAYS
 void BattleSystem::printPlayerDisplay() {

@@ -19,6 +19,8 @@ class BattleSystem {
 
         void playerAttack();
         void enemyAttack();
+        void playerTakeDamage(int);
+        void enemyTakeDamage(int);
 
         shared_ptr<Player> player_;
         shared_ptr<Actor> enemy_;
