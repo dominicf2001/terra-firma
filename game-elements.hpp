@@ -11,22 +11,27 @@ using std::shared_ptr;
 // HARMONICS
 class Harmonic {
     public:
-        Harmonic(string name, string desc, int resReq) : name_(name), desc_(desc), resReq_(resReq) {};
+        enum class Type {
+            attack,
+        };
+        Harmonic(string name, string desc, int resReq, Type type) : name_(name), desc_(desc), resReq_(resReq), type_(type) {};
 
         virtual void use(std::function<void(int)>)=0;
         string getName() const {return name_;}
         string getDesc() const {return desc_;}
         int getResReq() const {return resReq_;}
+        Type getType() const {return type_;}
     private:
         string name_;
         string desc_;
         int resReq_;
+        Type type_;
 };
 
 class AttackHarmonic : public Harmonic {
     public:
         AttackHarmonic(string name, string desc, int resReq, int minDmg, int maxDmg)
-        : Harmonic(name, desc, resReq),
+        : Harmonic(name, desc, resReq, Type::attack),
             minDmg_(minDmg), maxDmg_(maxDmg){};
         void use(std::function<void(int)>) override;
         int rollDmg() const {

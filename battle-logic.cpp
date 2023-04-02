@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include "game-elements.hpp"
 #include "utilities.hpp"
 using std::cout; using std::string; using std::cin;
 using std::shared_ptr;
@@ -53,13 +54,15 @@ void BattleSystem::enemyMove() {
     //  dmg * dmgMultiplier
     //  crit chance
     shared_ptr<Harmonic> harmonic = player_->getHarmonics()[0];
-    harmonic->use([this, harmonic](int dmg) {
-            cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
-            sleep(1);
-            cout << dmg << " DAMAGE!\n\n" << std::flush;
-            sleep(1);
-            playerTakeDamage(dmg);
-        });
+    if (harmonic->getType() == Harmonic::Type::attack) {
+        harmonic->use([this, harmonic](int dmg){
+                cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
+                sleep(1);
+                cout << dmg << " DAMAGE!\n\n" << std::flush;
+                sleep(1);
+                playerTakeDamage(dmg);
+            });
+    }
 }
 
 // TAKE DAMAGE
