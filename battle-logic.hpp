@@ -17,8 +17,8 @@ class BattleSystem {
         void printEnemyDisplay();
         void printGameOverDisplay();
 
-        void playerAttack();
-        void enemyAttack();
+        void playerMove();
+        void enemyMove();
         void playerTakeDamage(int);
         void enemyTakeDamage(int);
 

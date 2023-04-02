@@ -17,19 +17,18 @@ void BattleSystem::startBattle(shared_ptr<Actor> enemy) {
     while (!isBattleOver()) {
         if (playerTurn_) {
             printPlayerDisplay();
-            playerAttack();
+            playerMove();
         } else {
             printEnemyDisplay();
-            enemyAttack();
+            enemyMove();
         }
         playerTurn_ = !playerTurn_;
     }
     printGameOverDisplay();
 }
 
-
 // ATTACKS
-void BattleSystem::playerAttack() {
+void BattleSystem::playerMove() {
     // put additional calculations here
     int i = -1;
     while (i < 0 || i >= player_->getHarmonics().size()) {
@@ -39,35 +38,42 @@ void BattleSystem::playerAttack() {
             cout << "\n=-- Invalid! Please try again. --=\n\n";
     }
     shared_ptr<Harmonic> harmonic = player_->getHarmonics()[i];
-    int dmg = harmonic->getDmg();
-    cout << "\nYou attack with: " << harmonic->getName() << " for: " << std::flush;
-    sleep(1);
-    cout << dmg << " DAMAGE!\n\n" << std::flush;
-    sleep(1);
-    enemyTakeDamage(dmg);
+
+    harmonic->use([this, harmonic](int dmg) {
+            cout << "\nYou attack with: " << harmonic->getName() << " for: " << std::flush;
+            sleep(1);
+            cout << dmg << " DAMAGE!\n\n" << std::flush;
+            sleep(1);
+            enemyTakeDamage(dmg);
+        });
 }
 
-void BattleSystem::enemyAttack() {
+void BattleSystem::enemyMove() {
     // put additional calculations here
-    int dmg = enemy_->getHarmonics()[0]->getDmg();
-    cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
-    sleep(1);
-    cout << dmg << " DAMAGE!\n\n" << std::flush;
-    sleep(1);
-    playerTakeDamage(dmg);
+    //  dmg * dmgMultiplier
+    //  crit chance
+    shared_ptr<Harmonic> harmonic = player_->getHarmonics()[0];
+    harmonic->use([this, harmonic](int dmg) {
+            cout << enemy_->getName() << " attacks you with: " << enemy_->getHarmonics()[0]->getName() << " for: " << std::flush;
+            sleep(1);
+            cout << dmg << " DAMAGE!\n\n" << std::flush;
+            sleep(1);
+            playerTakeDamage(dmg);
+        });
 }
 
 // TAKE DAMAGE
 void BattleSystem::playerTakeDamage(int dmg) {
     // put additional calculations here
+    //  dmg / defense
     int newHealth = player_->getHealth() - dmg;
-    player_->changeHealth(newHealth);
+    player_->setHealth(newHealth);
 }
 
 void BattleSystem::enemyTakeDamage(int dmg) {
     // put additional calculations here
     int newHealth = enemy_->getHealth() - dmg;
-    enemy_->changeHealth(newHealth);
+    enemy_->setHealth(newHealth);
 }
 
 // DISPLAYS
@@ -81,8 +87,7 @@ void BattleSystem::printPlayerDisplay() {
     for (int i = 0; i < player_->getHarmonics().size(); ++i) {
         std::cout << "[" << i << "] " << player_->getHarmonics()[i]->getName() << '\n';
         std::cout << "    " << "Description: " << player_->getHarmonics()[i]->getDesc() << '\n';
-        std::cout << "    " << "Damage: " << player_->getHarmonics()[i]->getMinDmg() << "-" << player_->getHarmonics()[i]->getMaxDmg() << '\n';
-        std::cout << "    " << "Resonance Requirement: " << player_->getHarmonics()[i]->getResonanceReq() << '\n';;
+        std::cout << "    " << "Resonance Requirement: " << player_->getHarmonics()[i]->getResReq() << '\n';;
     }
 }
 

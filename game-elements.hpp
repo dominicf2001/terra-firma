@@ -3,15 +3,54 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <functional>
 #include <unordered_map>
 using std::string;
+using std::shared_ptr;
 
-// ITEM AND ITEM FACTORY
+// HARMONICS
+class Harmonic {
+    public:
+        Harmonic(string name, string desc, int resReq) : name_(name), desc_(desc), resReq_(resReq) {};
 
+        virtual void use(std::function<void(int)>)=0;
+        string getName() const {return name_;}
+        string getDesc() const {return desc_;}
+        int getResReq() const {return resReq_;}
+    private:
+        string name_;
+        string desc_;
+        int resReq_;
+};
+
+class AttackHarmonic : public Harmonic {
+    public:
+        AttackHarmonic(string name, string desc, int resReq, int minDmg, int maxDmg)
+        : Harmonic(name, desc, resReq),
+            minDmg_(minDmg), maxDmg_(maxDmg){};
+        void use(std::function<void(int)>) override;
+        int rollDmg() const {
+            RandomNumGen rng;
+            return rng.gen(minDmg_, maxDmg_);
+        }
+        int getMinDmg() const {return minDmg_;}
+        int getMaxDmg() const {return maxDmg_;}
+    private:
+        int minDmg_;
+        int maxDmg_;
+};
+
+class ResonanceBlast : public AttackHarmonic {
+    public:
+        ResonanceBlast()
+            : AttackHarmonic("Resonance Blast","Channel energy from The Essence to unleash a concentrated blast of resonant force" , 2, 27, 32) {};
+};
+
+// ITEMS
 class Item;
 class ItemFactory {
     public:
-        std::shared_ptr<Item> getCaveDoorKeyOne() {
+        shared_ptr<Item> getCaveDoorKeyOne() {
             return getItem("Cave Door Key One", "Opens cave door");
         }
         static ItemFactory& getInstance() {
@@ -22,8 +61,8 @@ class ItemFactory {
         ItemFactory(){};
         ItemFactory(ItemFactory&) = delete;
         ItemFactory& operator=(ItemFactory) = delete;
-        std::shared_ptr<Item> getItem(string name, string desc);
-        std::unordered_map<string, std::shared_ptr<Item>> items_;
+        shared_ptr<Item> getItem(string name, string desc);
+        std::unordered_map<string, shared_ptr<Item>> items_;
 };
 
 class Item {
@@ -33,53 +72,8 @@ class Item {
             desc_ = desc;
         }
         string getName() const {return name_;}
-        string getDesc() const {return desc_;}
-    private:
-        std::string name_;
-        std::string desc_;
-};
-
-// HARMONIC AND HARMONIC FACTORY
-
-class Harmonic;
-class HarmonicFactory {
-    public:
-        std::shared_ptr<Harmonic> getResonanceBlast() {
-            return getHarmonic("Resonance Blast", "Channel energy from The Essence to unleash a concentrated blast of resonant force", 27, 32, 2);
-        }
-        static HarmonicFactory& getInstance() {
-            static HarmonicFactory instance;
-            return instance;
-        }
-    private:
-        std::shared_ptr<Harmonic> getHarmonic(string name, string desc, int minDmg, int maxDmg, int resonanceRequirement);
-        std::unordered_map<string, std::shared_ptr<Harmonic>> harmonics_;
-};
-
-class Harmonic {
-    public:
-        Harmonic(string name, string desc, int minDmg, int maxDmg, int resonanceReq) {
-            name_ = name;
-            desc_ = desc;
-            minDmg_ = minDmg;
-            maxDmg_ = maxDmg;
-            resonanceReq_ = resonanceReq;
-        };
-        string getName() const {return name_;}
-        string getDesc() const {return desc_;}
-        int getDmg() const {
-            RandomNumGen rng;
-            return rng.gen(minDmg_, maxDmg_);
-        }
-        int getMinDmg() const {return minDmg_;}
-        int getMaxDmg() const {return maxDmg_;}
-        int getResonanceReq() const {return resonanceReq_;}
+        string getdesc() const {return desc_;}
     private:
         string name_;
         string desc_;
-        int minDmg_;
-        int maxDmg_;
-        int resonanceReq_;
 };
-
-
