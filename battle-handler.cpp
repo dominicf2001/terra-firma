@@ -1,5 +1,5 @@
 #include "game-actors.hpp"
-#include "battle-logic.hpp"
+#include "battle-handler.hpp"
 #include <iostream>
 #include <memory>
 #include <string>

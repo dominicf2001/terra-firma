@@ -1,5 +1,5 @@
 #pragma once
-#include "battle-logic.hpp"
+#include "battle-handler.hpp"
 #include "game-elements.hpp"
 #include <vector>
 #include <memory>
@@ -27,8 +27,7 @@ class Actor {
         string name_;
 };
 
-
-class BattleSystem;
+class BattleHandler;
 class Player: public Actor {
     public:
         Player(string name="Player")
@@ -41,15 +40,15 @@ class Player: public Actor {
         static shared_ptr<Player> getInstance() {
             if (instance_ == nullptr) {
                 instance_ = make_shared<Player>();
-                instance_->battleSystem_ = make_unique<BattleSystem>(instance_);
+                instance_->BattleHandler_ = make_unique<BattleHandler>(instance_);
             }
             return instance_;
         }
-        void startBattle(shared_ptr<Actor> enemy) {battleSystem_->startBattle(enemy);}
+        void startBattle(shared_ptr<Actor> enemy) {BattleHandler_->startBattle(enemy);}
     private:
         static shared_ptr<Player> instance_;
         vector<shared_ptr<Item>> inventory_;
-        unique_ptr<BattleSystem> battleSystem_;
+        unique_ptr<BattleHandler> BattleHandler_;
 };
 
 class RiftGuardian: public Actor {
