@@ -18,3 +18,7 @@ Considering the numerous potential directions for the game, I elected to commenc
 At this juncture, I recognized the value of incorporating a "utilities" file containing general-purpose operations to be utilized throughout the game. Among these utilities was a random number generator, which, when implemented idiomatically in C++, necessitates the employment of a class. This streamlined the development of the battle system.
 
 Following the implementation of battle logic, I devised a BattleSystem class to improve scalability and flexibility. This involved separating the Actor classes' implementation and consolidating it within the BattleSystem. Consequently, Actor classes maintain state and delegate behavior to the BattleSystem, which is expected to benefit future applications involving the Actor classes, particularly the Player class. This approach seems to be a mixture of the Bridge and Mediator design patterns.
+
+### Harmonics
+
+Harmonics are specialized abilities within the game's battle mode. To seamlessly integrate them with the BattleSystem while maintaining decoupling, the command design pattern is employed. The abstract Harmonic class has a pure virtual "use" method, which takes a callback function with an integer argument, representing various effects. This approach allows Harmonics to remain decoupled, enabling diverse utilization, with the eventual goal of expanding their use beyond the BattleSystem.
