@@ -13,7 +13,7 @@ The possibility of further differentiation between Player and Enemy behaviors hi
 
 ## Battle system
 
-Considering the numerous potential directions for the game, I elected to commence development by focusing on the battle system. Anticipating the eventual need for modularization, I initially opted for a simplistic function-based implementation, with the intention of abstracting the logic into a class or series of classes at a later stage. I devised a rudimentary turn-based loop reminiscent of the Pokémon-style battle system, wherein the player selects from a set of Harmonics (abilities) to employ against the enemy. To establish the foundational logic, I began by incorporating a basic attack Harmonic.
+Considering the numerous potential directions for the game, I commenced development by focusing on the battle system. Anticipating the eventual need for modularization, I initially opted for a simplistic function-based implementation, with the intention of abstracting the logic into a class or series of classes at a later stage. I devised a rudimentary turn-based loop reminiscent of the Pokémon-style battle system, wherein the player selects from a set of Harmonics (abilities) to employ against the enemy. To establish the foundational logic, I began by incorporating a basic attack Harmonic.
 
 At this juncture, I recognized the value of incorporating a "utilities" file containing general-purpose operations to be utilized throughout the game. Among these utilities was a random number generator, which, when implemented idiomatically in C++, necessitates the employment of a class. This streamlined the development of the battle system.
 
